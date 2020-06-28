@@ -50,8 +50,8 @@ class RecipeIngredient(db.Model):
     ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredient.id'), primary_key=True)
     amount = db.Column(db.Integer)
     unit = db.Column(db.VARCHAR(45), nullable=False)
-    recipes = db.relationship("Recipe", back_populates="ingredients")
-    ingredients = db.relationship("Ingredient", back_populates="recipes")
+    #recipes = db.relationship("Recipe", back_populates="ingredients")
+    #ingredients = db.relationship("Ingredient", back_populates="recipes")
 
 #TODO: may need to change this to just have an association table for the user?
 class UserPantry(db.Model):

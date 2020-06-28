@@ -1,14 +1,23 @@
 function addCalendar() {
     document.addEventListener('DOMContentLoaded', function () {
         var calendarEl = document.getElementById('calendar');
+        var Draggable = FullCalendar.Draggable;
+
+        var containerEl = document.getElementById("draggables");
+        var draggableEl = document.getElementById("draggables");
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             headerToolbar: {
                 left: 'prevYear,prev,next,nextYear today',
                 center: 'title',
-                right: 'dayGridMonth,dayGridWeek,dayGridDay'
+                right: 'dayGridMonth,dayGridWeek,listWeek'
             },
             initialDate: '2020-06-12',
+            droppable: true,
+            drop: function(info) {
+                
+            },
+            aspectRatio: 1.75,
             navLinks: true, // can click day/week names to navigate views
             editable: true,
             dayMaxEvents: true, // allow "more" link when too many events
@@ -71,5 +80,15 @@ function addCalendar() {
         });
 
         calendar.render();
+
+        new Draggable(containerEl, {
+            itemSelector: '.recipe',
+            eventData: function(eventEl) {
+                return {
+                  title: eventEl.innerText
+                };
+              }
+          });
+        
     });
 }

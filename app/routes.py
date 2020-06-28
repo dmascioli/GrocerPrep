@@ -5,9 +5,14 @@ from flask_login import current_user, login_user, logout_user
 from app.forms import LoginForm
 
 @app.route('/')
+def splash():
+    return render_template('splash.html')
 @app.route('/home')
 def home():
-    return render_template('home.html', title='Home')
+    #if current_user.is_authenticated:
+        return render_template('home.html', title='Home')
+    #else:
+    #    return redirect(url_for('splash'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
