@@ -1,31 +1,46 @@
-<html>
-    <head>
-      {% if title %}
-      <title>{{ title }} - Microblog</title>
-      {% else %}
-      <title>Welcome to Microblog</title>
-      {% endif %}
-    </head>
-    <body>
-        <div>
-            GrocerPrep:
-            <a href="{{ url_for('home') }}">Home</a>
-            {% if current_user.is_anonymous %}
-            <a href="{{ url_for('login') }}">Login</a>
-            {% else %}
-            <a href="{{ url_for('logout') }}">Logout</a>
-            {% endif %}
-        </div>
-        <hr>
+{% extends 'bootstrap/base.html' %}
+
+{% block styles %}
+{{super()}}
+
+<link rel="stylesheet" href="{{url_for('.static', filename='css/style.css')}}">
+
+{% endblock %}
+
+{% if title %}
+<title>{{ title }} - GrocerPrep</title>
+{% else %}
+<title>Welcome to GrocerPrep</title>
+{% endif %}
+
+
+{% block navbar %}
+    <ul class="nav nav-pills nav-fill">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('home') }}">Home</a>
+        </li>
+        {% if current_user.is_anonymous %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+        </li>
+        {% endif %}
+      </ul>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <ul>
             {% for message in messages %}
-            <li>{{ message }}</li>
+            <div class="alert alert-info" role="alert">{{ message }}</div>
             {% endfor %}
-        </ul>
         {% endif %}
         {% endwith %}
-        {% block content %}{% endblock %}
-    </body>
-</html>
+
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
