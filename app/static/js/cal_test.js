@@ -12,7 +12,7 @@ function addCalendar() {
                 center: 'title',
                 right: 'dayGridMonth,dayGridWeek,listWeek'
             },
-            initialDate: '2020-06-12',
+            initialDate: moment().format('YYYY-MM-DD'),
             droppable: true,
             drop: function(info) {
                 
