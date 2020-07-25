@@ -40,15 +40,8 @@ class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
 
-    _directions = db.Column(db.String, default='step')
-
-    @property
-    def directions(self):
-        return [float(x) for x in self._directions.split(';')]
-
-    @directions.setter
-    def ratings(self, value):
-        self._directions += ';%s' % value
+    directions = db.Column(db.Text())
+    ingredients = db.Column(db.Text())
 
 
 class RecipeIngredient(db.Model):

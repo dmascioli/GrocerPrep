@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+
+<div class="container">
+    <h1>
+        {{recipe.name}}
+    </h1>
+    <br>
+    <p>
+        Description
+    </p>
+    <br>
+    <p>
+        {{recipe.ingredients}}
+    </p>
+    <br>
+    <p>
+        {{recipe.directions}}
+    </p>
+</div>
+
+{% endblock %}

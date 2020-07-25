@@ -37,3 +37,8 @@ html {
     padding-bottom: 40px;
     background-color: #f5f5f5;
   }
+
+.recipe {
+  width: 18%;
+  margin: 10px;
+}
