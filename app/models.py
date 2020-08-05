@@ -1,7 +1,7 @@
 from app import db, login
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-
+import enum
 
 class User(UserMixin, db.Model):
     __tablename__ = 'user'
@@ -29,10 +29,15 @@ class Ingredient(db.Model):
     __tablename__ = 'ingredient'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), index=True)
-    category = db.Column(db.String(20), index=True)
 
-    def __repr__(self):
-        return '<Ingredient {}>'.format(self.name)
+    # nutritional macros
+    serving_amount = db.Column(db.Integer)
+    serving_unit = db.Column(db.String(10))
+    calories = db.Column(db.Integer)
+    carbs = db.Column(db.Integer)
+    protein = db.Column(db.Integer)
+    fat = db.Column(db.Integer)
+    
 
 
 class Recipe(db.Model):
@@ -41,7 +46,7 @@ class Recipe(db.Model):
     name = db.Column(db.String(64), index=True)
 
     directions = db.Column(db.Text())
-    ingredients = db.Column(db.Text())
+    
 
 
 class RecipeIngredient(db.Model):
@@ -50,8 +55,8 @@ class RecipeIngredient(db.Model):
     ingredient_id = db.Column(db.Integer, db.ForeignKey('ingredient.id'), primary_key=True)
     amount = db.Column(db.Integer)
     unit = db.Column(db.VARCHAR(45), nullable=False)
-    # recipes = db.relationship("Recipe", back_populates="ingredients")
-    # ingredients = db.relationship("Ingredient", back_populates="recipes")
+    #recipes = db.relationship("Recipe", backref="ingredients")
+    #ingredients = db.relationship("Ingredient", backref="recipes")
 
 
 # TODO: may need to change this to just have an association table for the user?

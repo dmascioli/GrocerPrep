@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: da26c5d17f10
+Revision ID: 82abb7e7f001
 Revises: 
-Create Date: 2020-07-25 18:12:40.518586
+Create Date: 2020-07-30 14:47:10.792849
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'da26c5d17f10'
+revision = '82abb7e7f001'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,16 +21,19 @@ def upgrade():
     op.create_table('ingredient',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=True),
-    sa.Column('category', sa.String(length=20), nullable=True),
+    sa.Column('serving_amount', sa.Integer(), nullable=True),
+    sa.Column('serving_unit', sa.String(length=10), nullable=True),
+    sa.Column('calories', sa.Integer(), nullable=True),
+    sa.Column('carbs', sa.Integer(), nullable=True),
+    sa.Column('protein', sa.Integer(), nullable=True),
+    sa.Column('fat', sa.Integer(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_ingredient_category'), 'ingredient', ['category'], unique=False)
     op.create_index(op.f('ix_ingredient_name'), 'ingredient', ['name'], unique=False)
     op.create_table('recipe',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=64), nullable=True),
     sa.Column('directions', sa.Text(), nullable=True),
-    sa.Column('ingredients', sa.Text(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_recipe_name'), 'recipe', ['name'], unique=False)
@@ -74,6 +77,5 @@ def downgrade():
     op.drop_index(op.f('ix_recipe_name'), table_name='recipe')
     op.drop_table('recipe')
     op.drop_index(op.f('ix_ingredient_name'), table_name='ingredient')
-    op.drop_index(op.f('ix_ingredient_category'), table_name='ingredient')
     op.drop_table('ingredient')
     # ### end Alembic commands ###

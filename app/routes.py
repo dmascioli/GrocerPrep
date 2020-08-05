@@ -1,5 +1,5 @@
 from app import app, db
-from app.models import User, Recipe
+from app.models import User, Recipe, Ingredient, RecipeIngredient
 from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user, logout_user
 from app.forms import LoginForm, RegistrationForm, AddRecipeForm
@@ -14,19 +14,7 @@ def home():
     else:
         return redirect(url_for('splash'))
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    form = RegistrationForm()
-    if form.validate_on_submit():
-        user = User(username=form.username.data, email=form.email.data)
-        user.set_password(form.password.data)
-        db.session.add(user)
-        db.session.commit()
-        flash('Congratulations, you are now a registered user!')
-        return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+
 
 @app.route('/recipes/<int:recipe_id>')
 @app.route('/recipes', methods=['GET'])
@@ -42,29 +30,45 @@ def recipes(recipe_id=None):
 def add_recipe():
     form = AddRecipeForm()
     if form.validate_on_submit():
-        recipe = Recipe(name=form.recipe_name.data, directions=form.directions.data, ingredients=form.ingredients.data)
+        recipe = Recipe(name=form.recipe_name.data, directions=form.directions.data)
+
+        ingredients = parse_ingredients(form.ingredients.data)
         db.session.add(recipe)
         db.session.commit()
+
+        # last added recipe id
+        recipe_id = Recipe.query.order_by(Recipe.id.desc()).first().id
+
+        # add all ingredients to RecipeIngredient table
+        for ingredient in ingredients:
+            db.session.add(RecipeIngredient(recipe_id=recipe_id, ingredient_id=ingredient['id'], amount=ingredient['amount'], unit=ingredient['unit']))
+        db.session.commit()
+
         flash('Recipe Added')
         return redirect(url_for('recipes'))
     return render_template('add_recipe.html', title='Add Recipe', form=form)
 
+def parse_ingredients(ingredients):
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if current_user.is_authenticated:
-        return redirect(url_for('home'))
-    form = LoginForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.username.data).first()
-        if user is None or not user.check_password(form.password.data):
-            flash('Invalid username or password')
-            return redirect(url_for('login'))
-        login_user(user, remember=form.remember_me.data)
-        return redirect(url_for('home'))
-    return render_template('login.html', title='Sign In', form=form)
+    return_list = []
 
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('home'))
+    ing_list = ingredients.split('\r\n')
+
+    for ing in ing_list:
+        
+        # check database if this ingredient exists already
+        
+
+        # use api to get nutritional data
+
+        
+
+        ingredient = Ingredient(name=ing, serving_amount=am, serving_unit=unit, calories=calories, carbs=carbs, protein=protein, fat=fat)
+        db.session.add(ingredient)
+        db.session.commit()
+
+        ingredient_dict = {'id': Ingredient.query.order_by(Ingredient.id.desc()).first().id, 'amount': am, 'unit': unit}
+        return_list.append(ingredient_dict)
+
+    return return_list
+
