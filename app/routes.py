@@ -1,6 +1,6 @@
 from app import app, db
-from app.models import User, Recipe, Ingredient, RecipeIngredient
-from flask import render_template, flash, redirect, url_for, request
+from app.models import User, Recipe, Ingredient, RecipeIngredient, MealList, RecipeList
+from flask import render_template, flash, redirect, url_for, request, g
 from flask_login import current_user, login_user, logout_user
 from app.forms import LoginForm, RegistrationForm, AddRecipeForm
 
@@ -13,7 +13,8 @@ def splash():
 @app.route('/home')
 def home():
     if current_user.is_authenticated:
-        return render_template('home.html', title='Home', user=current_user)
+        meal_lists = MealList.query.filter_by(user_id=current_user.id).all()
+        return render_template('home.html', title='Home', user=current_user, meal_lists=meal_lists)
     else:
         return redirect(url_for('splash'))
 
@@ -62,9 +63,7 @@ def parse_ingredients(ingredients):
     for ing in ing_list:
 
         # check database if this ingredient exists already
-
         # use api to get nutritional data
-
         ingredient = Ingredient(name=ing, serving_amount=am, serving_unit=unit,
                                 calories=calories, carbs=carbs, protein=protein, fat=fat)
         db.session.add(ingredient)
@@ -85,7 +84,13 @@ def create_list():
     else:
         selected_recipes = request.form.getlist('recipes')
         name = request.form.get('listname')
-        # TODO: add all selected recipes to a RecipeList database entry
+        list_entry = MealList(user_id=current_user.id, list_name=name)
+        db.session.add(list_entry)
+        db.session.flush()
+        for id in selected_recipes:
+            entry = RecipeList(list_id=list_entry.list_id, recipe_id=id)
+            db.session.add(entry)
+            db.session.commit()
         flash('Meal List created')
         return redirect(url_for('home'))
 

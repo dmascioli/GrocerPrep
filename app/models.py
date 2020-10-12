@@ -62,6 +62,7 @@ class MealList(db.Model):
     __tablename__ = 'user-list'
     list_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    list_name = db.Column(db.String(64), index=True)
 
 
 class RecipeList(db.Model):
