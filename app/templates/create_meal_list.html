@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
+<div class="container center">
+    <h1>Create Meal List</h1>
+
+    <form method="post">
+        <div class="btn-group btn-group-vertical btn-group-toggle d-flex" data-toggle="buttons">
+            {% for recipe in recipes %}
+            <div class="list-group-item btn btn-outline-primary btn-block">
+                <input type="checkbox" autocomplete="false" name="recipes" value={{recipe.id}}>
+                {{ recipe.name }}
+            </div>
+            {% endfor %}
+        </div>
+        <br>
+
+        <div class="input-group mb-3">
+            <input type="text" class="form-control" placeholder="List Name" aria-label="Meal List Name" name="listname"
+                aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-success" type="submit">Submit</button>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+
+{% endblock %}

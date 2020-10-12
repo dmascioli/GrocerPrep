@@ -15,7 +15,8 @@ class RegistrationForm(FlaskForm):
     username = StringField(('Username'), validators=[DataRequired()])
     email = StringField(('Email'), validators=[DataRequired(), Email()])
     password = PasswordField(('Password'), validators=[DataRequired()])
-    password2 = PasswordField(('Repeat Password'), validators=[DataRequired(), EqualTo('password')])
+    password2 = PasswordField(('Repeat Password'), validators=[
+                              DataRequired(), EqualTo('password')])
     submit = SubmitField(('Register'))
 
     def validate_username(self, username):
@@ -31,6 +32,8 @@ class RegistrationForm(FlaskForm):
 
 class AddRecipeForm(FlaskForm):
     recipe_name = StringField(('Recipe Name'), validators=[DataRequired()])
-    directions = TextAreaField(('Directions'), validators=[DataRequired()], render_kw={"rows": 10})
-    ingredients = TextAreaField(('Ingredients'), validators=[DataRequired()], render_kw={"rows": 10})
+    directions = TextAreaField(('Directions'), validators=[
+                               DataRequired()], render_kw={"rows": 10})
+    ingredients = TextAreaField(('Ingredients'), validators=[
+                                DataRequired()], render_kw={"rows": 10})
     submit = SubmitField(('Add Recipe'))
